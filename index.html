@@ -448,6 +448,22 @@
             </div>
             <span style="font-size:12px;color:var(--muted)">/api/health</span>
           </div>
+<pre><code>// Minimal example — resilient health endpoint (C#)
+app.MapGet("/api/health", () =&gt;
+{
+    var checks = new [] { "db", "cache", "queue" };
+    return Results.Ok(new {
+        status = "ok",
+        checked = checks,
+        at = DateTime.UtcNow
+    });
+});
+
+// Tip: Deploy with GitHub Actions + Docker for quick rollouts.</code></pre>
+        </div>
+      </div>
+    </section>
+
     <!-- Features -->
     <section id="features" class="section">
       <div class="container">
