@@ -448,22 +448,6 @@
             </div>
             <span style="font-size:12px;color:var(--muted)">/api/health</span>
           </div>
-          <pre><code>// Minimal example — resilient health endpoint (Node.js / Express)
-const express = require("express");
-const app = express();
-
-app.get("/api/health", (req, res) => {
-  const checks = ["db", "cache", "queue"];
-  res.json({
-    status: "ok",
-    checked: checks,
-    at: new Date().toISOString()
-  });
-});
-
-app.listen(3000, () => console.log("Server running on http://localhost:3000"));
-</code></pre>
-
     <!-- Features -->
     <section id="features" class="section">
       <div class="container">
