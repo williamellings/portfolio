@@ -448,21 +448,23 @@
             </div>
             <span style="font-size:12px;color:var(--muted)">/api/health</span>
           </div>
-<pre><code>// Minimal example — resilient health endpoint (C#)
-app.MapGet("/api/health", () =&gt;
-{
-    var checks = new [] { "db", "cache", "queue" };
-    return Results.Ok(new {
-        status = "ok",
-        checked = checks,
-        at = DateTime.UtcNow
-    });
-});
+          <pre><code># Minimal example — resilient health endpoint (Python)
+from fastapi import FastAPI
+from datetime import datetime
 
-// Tip: Deploy with GitHub Actions + Docker for quick rollouts.</code></pre>
-        </div>
-      </div>
-    </section>
+app = FastAPI()
+
+@app.get("/api/health")
+def health():
+    checks = ["db", "cache", "queue"]
+    return {
+        "status": "ok",
+        "checked": checks,
+        "at": datetime.utcnow().isoformat()
+    }
+
+# Tip: Run with uvicorn main:app --reload
+</code></pre>
 
     <!-- Features -->
     <section id="features" class="section">
