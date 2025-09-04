@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!--
+    Single-file, responsive, modern website.
+    Drop this file into your GitHub repo (e.g., index.html) and enable GitHub Pages.
+    No external assets required.
+  -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wille — Cloud-minded Backend Dev</title>
+  <meta name="description" content="Portfolio site — modern, responsive, and fast. Built as a single HTML file for GitHub Pages." />
+  <meta name="theme-color" content="#0ea5ea" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Wille — Cloud-minded Backend Dev" />
+  <meta property="og:description" content="Portfolio site — modern, responsive, and fast. Single-file for GitHub Pages." />
+  <meta property="og:type" content="website" />
+
+  <style>
+    /* ------------------------------
+       Minimal modern reset
+    --------------------------------*/
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body, h1, h2, h3, h4, h5, h6, p, figure { margin: 0; }
+    img, picture, svg, video { display: block; max-width: 100%; }
+    button, input, select, textarea { font: inherit; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; padding: 0; margin: 0; }
+
+    /* ------------------------------
+       Design Tokens (CSS Variables)
+    --------------------------------*/
+    :root {
+      --bg: #0b1020;
+      --bg-2: #0e1428;
+      --text: #e8f1ff;
+      --muted: #b7c4d8;
+      --card: rgba(255, 255, 255, 0.06);
+      --glass: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.12);
+      --brand: #0ea5ea;   /* cyan */
+      --brand-2: #22d3ee; /* lighter cyan */
+      --accent: #a78bfa;  /* purple */
+      --ok: #34d399;      /* green */
+      --warn: #f59e0b;    /* amber */
+      --danger: #f43f5e;  /* rose */
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+
+      --radius: 18px;
+      --radius-sm: 12px;
+      --radius-lg: 26px;
+
+      --container: 1200px;
+      --space-1: 6px;
+      --space-2: 10px;
+      --space-3: 16px;
+      --space-4: 24px;
+      --space-5: 32px;
+      --space-6: 48px;
+      --space-7: 64px;
+
+      --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    /* Light theme (auto if user toggles) */
+    .theme-light {
+      --bg: #f7f9fc;
+      --bg-2: #ffffff;
+      --text: #0b1020;
+      --muted: #4a5771;
+      --card: rgba(10, 15, 30, 0.05);
+      --glass: rgba(10, 15, 30, 0.06);
+      --border: rgba(10, 15, 30, 0.12);
+      --shadow: 0 10px 30px rgba(0, 0, 0, .12);
+    }
+
+    /* ------------------------------
+       Base
+    --------------------------------*/
+    body {
+      font-family: var(--font-sans);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(56,189,248,.22), transparent 60%),
+        radial-gradient(900px 500px at -10% 20%, rgba(167,139,250,.18), transparent 60%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      background-attachment: fixed;
+      line-height: 1.6;
+      letter-spacing: 0.2px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: 20px;
+    }
+
+    .section {
+      padding-block: clamp(64px, 9vw, 120px);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .12s ease, box-shadow .12s ease, background .2s ease;
+      will-change: transform;
+      background: var(--glass);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      border-color: transparent;
+      color: white;
+    }
+    .btn-ghost {
+      background: transparent;
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--glass), transparent 120%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: clip;
+      box-shadow: var(--shadow);
+    }
+
+    .grid {
+      display: grid;
+      gap: 20px;
+    }
+    @media (min-width: 700px) {
+      .grid-3 { grid-template-columns: repeat(3, 1fr); }
+      .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ------------------------------
+       Header / Nav
+    --------------------------------*/
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+      background: color-mix(in oklab, var(--bg) 70%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      gap: 14px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: .3px;
+    }
+    .brand-icon {
+      width: 28px; height: 28px; border-radius: 10px;
+      background: conic-gradient(from 180deg, var(--brand), var(--accent), var(--brand));
+      box-shadow: 0 6px 20px rgba(14,165,234,.45);
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 14px;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hamburger {
+      display: inline-flex;
+      width: 44px; height: 44px;
+      align-items: center; justify-content: center;
+      border-radius: 10px; border: 1px solid var(--border);
+      background: var(--glass);
+      cursor: pointer;
+    }
+
+    @media (min-width: 900px) {
+      .nav-links { display: flex; }
+      .hamburger { display: none; }
+    }
+
+    .mobile-menu {
+      display: none;
+      padding: 10px 0 18px;
+      border-bottom: 1px solid var(--border);
+      background: color-mix(in oklab, var(--bg-2) 85%, transparent);
+    }
+    .mobile-menu.open { display: block; }
+    .mobile-menu a {
+      display: block; padding: 12px 14px; border-radius: 10px;
+    }
+    .mobile-menu a:hover { background: var(--glass); }
+
+    /* ------------------------------
+       Hero
+    --------------------------------*/
+    .hero {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+    @media (min-width: 980px) {
+      .hero { grid-template-columns: 1.3fr 1fr; gap: 40px; }
+    }
+    .headline {
+      font-size: clamp(30px, 5vw, 56px);
+      line-height: 1.05;
+      letter-spacing: .4px;
+      font-weight: 900;
+    }
+    .sub {
+      color: var(--muted);
+      max-width: 60ch;
+      margin-top: 10px;
+    }
+    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+
+    .code-card {
+      padding: 18px;
+    }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 12px; border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), transparent);
+    }
+    .dots { display: inline-flex; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.red { background: #ff5f56; }
+    .dot.yellow { background: #ffbd2e; }
+    .dot.green { background: #27c93f; }
+    pre {
+      margin: 0; padding: 16px; overflow: auto;
+      font-family: var(--font-mono); font-size: 13.5px; line-height: 1.5;
+      background: linear-gradient(180deg, rgba(10,15,30,.35), rgba(10,15,30,.18));
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+
+    /* ------------------------------
+       Section Headings
+    --------------------------------*/
+    .label {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: 13px; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .section-title {
+      font-size: clamp(24px, 3.5vw, 36px);
+      line-height: 1.15;
+      margin-top: 10px;
+      margin-bottom: 14px;
+    }
+    .section-lead { color: var(--muted); max-width: 68ch; }
+
+    /* ------------------------------
+       Feature Cards
+    --------------------------------*/
+    .feature {
+      padding: 18px;
+      position: relative;
+      overflow: clip;
+    }
+    .feature:hover::after {
+      opacity: .9; transform: translate(-50%, -50%) scale(1.05);
+    }
+    .feature::after {
+      content: "";
+      position: absolute; inset: auto auto -45% -45%;
+      width: 140%; height: 140%;
+      background: radial-gradient(450px 150px at 90% 10%, color-mix(in oklab, var(--brand) 45%, transparent) 0%, transparent 60%);
+      filter: blur(40px); opacity: .55;
+      transition: .5s ease;
+      pointer-events: none;
+    }
+    .feature h3 { font-size: 18px; margin-bottom: 8px; }
+    .feature p { color: var(--muted); font-size: 15px; }
+
+    /* ------------------------------
+       Project Cards
+    --------------------------------*/
+    .project {
+      display: grid;
+      grid-template-rows: 180px auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: clip;
+      background: var(--glass);
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .project:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,.35); }
+    .project-visual {
+      background: linear-gradient(120deg, color-mix(in oklab, var(--brand) 70%, transparent), color-mix(in oklab, var(--accent) 65%, transparent));
+      position: relative;
+      isolation: isolate;
+    }
+    .project-visual svg {
+      position: absolute; inset: 0; width: 100%; height: 100%; opacity: .35;
+      mix-blend-mode: overlay;
+    }
+    .project-body { padding: 16px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .chip {
+      font-size: 12px; padding: 6px 10px; border-radius: 999px;
+      background: color-mix(in oklab, var(--glass) 70%, transparent);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    /* ------------------------------
+       Contact
+    --------------------------------*/
+    .contact-card { padding: 20px; display: grid; gap: 14px; }
+    .input {
+      width: 100%; padding: 12px 14px; border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--glass); color: var(--text);
+      outline: none;
+    }
+    .input::placeholder { color: color-mix(in oklab, var(--muted) 70%, transparent); }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* ------------------------------
+       Footer
+    --------------------------------*/
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 22px 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* ------------------------------
+       Reveal Animations
+    --------------------------------*/
+    .reveal { opacity: 0; transform: translateY(12px); }
+    .reveal.show { opacity: 1; transform: translateY(0); transition: .6s ease; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn, .project, .feature, .reveal { transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header / Navbar -->
+  <header>
+    <div class="container nav" role="navigation" aria-label="Main">
+      <a class="brand" href="#top">
+        <span class="brand-icon" aria-hidden="true"></span>
+        <span>Wille.dev</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#projects" class="pill">Projects</a>
+        <a href="#features" class="pill">What I do</a>
+        <a href="#contact" class="pill">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <button id="themeToggle" class="hamburger" aria-label="Toggle theme" aria-pressed="false" title="Theme">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="1.6"/>
+          </svg>
+        </button>
+        <button id="menuToggle" class="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div id="mobileMenu" class="mobile-menu" role="menu" aria-labelledby="menuToggle">
+      <div class="container">
+        <a role="menuitem" href="#projects">Projects</a>
+        <a role="menuitem" href="#features">What I do</a>
+        <a role="menuitem" href="#contact">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="section">
+      <div class="container hero">
+        <div class="reveal">
+          <span class="pill">👋 Hey! I’m Wille — backend developer (cloud-first)</span>
+          <h1 class="headline">I build fast, reliable backends and clean cloud pipelines.</h1>
+          <p class="sub">
+            Modern APIs, secure auth, CI/CD, and databases that scale. This site is a single, self-contained HTML file —
+            perfect for GitHub Pages.
+          </p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#projects">Explore Projects</a>
+            <a class="btn btn-ghost" href="#contact">Get in Touch</a>
+          </div>
+          <div class="chips" style="margin-top:14px">
+            <span class="chip">.NET · C#</span>
+            <span class="chip">Python</span>
+            <span class="chip">SQL · PostgreSQL</span>
+            <span class="chip">Azure · AWS</span>
+            <span class="chip">Docker · CI/CD</span>
+          </div>
+        </div>
+
+        <div class="card code-card reveal" aria-label="Code preview">
+          <div class="code-header">
+            <div class="dots">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+            </div>
+            <span style="font-size:12px;color:var(--muted)">/api/health</span>
+          </div>
+<pre><code>// Minimal example — resilient health endpoint (C#)
+app.MapGet("/api/health", () =&gt;
+{
+    var checks = new [] { "db", "cache", "queue" };
+    return Results.Ok(new {
+        status = "ok",
+        checked = checks,
+        at = DateTime.UtcNow
+    });
+});
+
+// Tip: Deploy with GitHub Actions + Docker for quick rollouts.</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="section">
+      <div class="container">
+        <div class="reveal">
+          <div class="label">What I do</div>
+          <h2 class="section-title">From database schema to production pipelines.</h2>
+          <p class="section-lead">I design APIs and systems that are easy to reason about, test, and scale.</p>
+        </div>
+
+        <div class="grid grid-3" style="margin-top:24px">
+          <article class="card feature reveal">
+            <h3>API Design &amp; Security</h3>
+            <p>REST/JSON, OpenAPI, OAuth2, JWT. Input validation, rate limiting, and defense-in-depth.</p>
+          </article>
+          <article class="card feature reveal">
+            <h3>Data &amp; Storage</h3>
+            <p>Relational schemas, indexes, transactions, and query performance for PostgreSQL &amp; SQL Server.</p>
+          </article>
+          <article class="card feature reveal">
+            <h3>Cloud &amp; CI/CD</h3>
+            <p>Containerized microservices with Docker and automated delivery with GitHub Actions.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="section">
+      <div class="container">
+        <div class="reveal">
+          <div class="label">Showcase</div>
+          <h2 class="section-title">Recent Projects</h2>
+          <p class="section-lead">A quick taste. Swap the content to your own repos later.</p>
+        </div>
+
+        <div class="grid grid-3" style="margin-top:24px">
+          <!-- Project 1 -->
+          <article class="project reveal" aria-labelledby="proj1-title">
+            <div class="project-visual" role="img" aria-label="Gradient visualization of API gateway">
+              <svg viewBox="0 0 600 300" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+                    <stop offset="0%" stop-color="white" stop-opacity="0.7"/>
+                    <stop offset="100%" stop-color="white" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <g opacity="0.9">
+                  <rect x="30" y="40" width="180" height="220" fill="url(#g1)" rx="14"/>
+                  <rect x="240" y="60" width="140" height="180" fill="url(#g1)" rx="14"/>
+                  <rect x="410" y="40" width="160" height="220" fill="url(#g1)" rx="14"/>
+                </g>
+              </svg>
+            </div>
+            <div class="project-body">
+              <h3 id="proj1-title">API Gateway + Auth</h3>
+              <p style="color:var(--muted)">Secure API gateway with JWT/OAuth2, rate limiting, and observability.</p>
+              <div class="chips">
+                <span class="chip">C#</span><span class="chip">ASP.NET</span><span class="chip">Docker</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 2 -->
+          <article class="project reveal" aria-labelledby="proj2-title">
+            <div class="project-visual" role="img" aria-label="Gradient visualization of event bus">
+              <svg viewBox="0 0 600 300" preserveAspectRatio="none" aria-hidden="true">
+                <defs><linearGradient id="g2" x1="1" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="white" stop-opacity="0.7"/>
+                  <stop offset="100%" stop-color="white" stop-opacity="0"/>
+                </linearGradient></defs>
+                <g opacity="0.9">
+                  <circle cx="120" cy="150" r="70" fill="url(#g2)"/>
+                  <rect x="240" y="80" width="120" height="140" rx="14" fill="url(#g2)"/>
+                  <circle cx="470" cy="150" r="80" fill="url(#g2)"/>
+                </g>
+              </svg>
+            </div>
+            <div class="project-body">
+              <h3 id="proj2-title">Event-Driven Orders</h3>
+              <p style="color:var(--muted)">Orders microservice with outbox pattern, retries, and idempotency keys.</p>
+              <div class="chips">
+                <span class="chip">.NET</span><span class="chip">PostgreSQL</span><span class="chip">Message Bus</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 3 -->
+          <article class="project reveal" aria-labelledby="proj3-title">
+            <div class="project-visual" role="img" aria-label="Gradient visualization of dashboards">
+              <svg viewBox="0 0 600 300" preserveAspectRatio="none" aria-hidden="true">
+                <defs><linearGradient id="g3" x1="0" x2="1" y1="1" y2="0">
+                  <stop offset="0%" stop-color="white" stop-opacity="0.7"/>
+                  <stop offset="100%" stop-color="white" stop-opacity="0"/>
+                </linearGradient></defs>
+                <g opacity="0.9">
+                  <rect x="40" y="60" width="160" height="180" fill="url(#g3)" rx="14"/>
+                  <rect x="230" y="40" width="180" height="220" fill="url(#g3)" rx="14"/>
+                  <rect x="430" y="80" width="130" height="160" fill="url(#g3)" rx="14"/>
+                </g>
+              </svg>
+            </div>
+            <div class="project-body">
+              <h3 id="proj3-title">Metrics &amp; Tracing</h3>
+              <p style="color:var(--muted)">OpenTelemetry traces, distributed logging, and SLO dashboards.</p>
+              <div class="chips">
+                <span class="chip">OTel</span><span class="chip">Prometheus</span><span class="chip">Grafana</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section">
+      <div class="container">
+        <div class="reveal">
+          <div class="label">Contact</div>
+          <h2 class="section-title">Let’s build something great.</h2>
+          <p class="section-lead">This form doesn’t need a backend — it opens your mail app or copies the email.</p>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:24px">
+          <div class="card contact-card reveal">
+            <label for="msg" style="font-weight:700">Your Message</label>
+            <textarea id="msg" class="input" rows="6" placeholder="Hello! I’d like to talk about a project..."></textarea>
+            <div class="actions">
+              <a id="mailtoBtn" class="btn btn-primary" href="mailto:hello@example.com?subject=Project%20inquiry">Open Mail</a>
+              <button class="btn" id="copyEmailBtn" type="button">Copy Email</button>
+              <button class="btn" id="clearBtn" type="button">Clear</button>
+            </div>
+            <small style="color:var(--muted)">Email: <span id="emailText">hello@example.com</span></small>
+          </div>
+
+          <div class="card contact-card reveal">
+            <h3 style="font-size:20px">Why work with me?</h3>
+            <ul style="color:var(--muted)">
+              <li>✅ Solid engineering practices (tests, reviews, CI/CD)</li>
+              <li>⚡ Performance-minded APIs and queries</li>
+              <li>🔐 Security first: input validation &amp; auth done right</li>
+              <li>☁️ Cloud-ready from day one</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+      <div>© <span id="year"></span> Wille. All rights reserved.</div>
+      <div style="display:flex; gap:10px;">
+        <a class="pill" href="#top" aria-label="Back to top">⬆ Back to top</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ------------------------------
+    // Theme: respect system + toggle
+    // ------------------------------
+    (function initTheme() {
+      const saved = localStorage.getItem("theme");
+      const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+      if (saved === "light" || (!saved && prefersLight)) {
+        document.documentElement.classList.add("theme-light");
+      }
+    })();
+
+    const themeToggle = document.getElementById("themeToggle");
+    themeToggle?.addEventListener("click", () => {
+      const isLight = document.documentElement.classList.toggle("theme-light");
+      localStorage.setItem("theme", isLight ? "light" : "dark");
+      themeToggle.setAttribute("aria-pressed", String(isLight));
+    });
+
+    // ------------------------------
+    // Mobile menu
+    // ------------------------------
+    const menuToggle = document.getElementById("menuToggle");
+    const mobileMenu = document.getElementById("mobileMenu");
+    menuToggle?.addEventListener("click", () => {
+      const open = mobileMenu.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(open));
+    });
+    mobileMenu?.querySelectorAll("a").forEach(a => {
+      a.addEventListener("click", () => {
+        mobileMenu.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    // ------------------------------
+    // Smooth scrolling for same-page links
+    // ------------------------------
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener("click", e => {
+        const id = link.getAttribute("href");
+        if (!id || id === "#") return;
+        const target = document.querySelector(id);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+
+    // ------------------------------
+    // Reveal on scroll
+    // ------------------------------
+    const revealEls = document.querySelectorAll(".reveal");
+    const io = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+          io.unobserve(entry.target);
+        }
+      }
+    }, { threshold: 0.1 });
+    revealEls.forEach(el => io.observe(el));
+
+    // ------------------------------
+    // Contact helpers
+    // ------------------------------
+    const msg = document.getElementById("msg");
+    const mailBtn = document.getElementById("mailtoBtn");
+    const copyEmailBtn = document.getElementById("copyEmailBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const emailText = document.getElementById("emailText");
+    const email = emailText?.textContent?.trim() || "hello@example.com";
+
+    function updateMailto() {
+      const body = encodeURIComponent((msg?.value || "").trim());
+      const subject = encodeURIComponent("Project inquiry");
+      mailBtn?.setAttribute("href", `mailto:${email}?subject=${subject}&body=${body}`);
+    }
+    msg?.addEventListener("input", updateMailto);
+    updateMailto();
+
+    copyEmailBtn?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(email);
+        copyEmailBtn.textContent = "Copied!";
+        setTimeout(() => copyEmailBtn.textContent = "Copy Email", 1200);
+      } catch {
+        alert("Copy failed. Email: " + email);
+      }
+    });
+
+    clearBtn?.addEventListener("click", () => {
+      if (msg) msg.value = "";
+      updateMailto();
+    });
+
+    // ------------------------------
+    // Footer year
+    // ------------------------------
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
