@@ -323,7 +323,7 @@ def health():
               <button id="copy" class="btn" type="button">Copy Email</button>
               <button id="clear" class="btn" type="button">Clear</button>
             </div>
-            <small style="color:var(--muted)">Email: <span id="emailText">hello@example.com</span></small>
+            <small style="color:var(--muted)">Email: <span id="emailText">wille.ellings@hotmail.com</span></small>
           </div>
 
           <div class="card reveal">
@@ -397,7 +397,7 @@ def health():
     const copy = document.getElementById("copy");
     const clear = document.getElementById("clear");
     const emailText = document.getElementById("emailText");
-    const email = emailText?.textContent?.trim() || "hello@example.com";
+    const email = emailText?.textContent?.trim() || "wille.ellings@hotmail.com";
 
     function updateMailto(){
       const body = encodeURIComponent((msg?.value || "").trim());
